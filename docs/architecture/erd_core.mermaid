@@ -1,0 +1,238 @@
+erDiagram
+    %% ============ CRM / SALES ============
+    LEAD_SOURCES ||--o{ LEADS_MASTER : "generates"
+    LEAD_STATUSES ||--o{ LEADS_MASTER : "classifies"
+    USERS ||--o{ LEADS_MASTER : "assigned to"
+    CUSTOMER_MASTER ||--o{ LEADS_MASTER : "converts to"
+    LEADS_MASTER ||--o{ ORDER_MASTER : "becomes"
+    CUSTOMER_MASTER ||--o{ ORDER_MASTER : "places"
+
+    %% ============ ORDER FULFILMENT & BILLING ============
+    LEADS_MASTER ||--o{ MEASUREMENTS : "measured for"
+    ORDER_MASTER ||--o{ MEASUREMENTS : "captures"
+    CUSTOMER_MASTER ||--o{ MEASUREMENTS : "school of"
+    ORDER_MASTER ||--o{ ORDER_INVOICES : "billed via"
+    ORDER_MASTER ||--o{ ORDER_PAYMENTS : "paid via"
+
+    %% ============ PROCUREMENT & FABRIC STOCK ============
+    VENDORS ||--o{ PURCHASE_ORDERS : "supplies"
+    ORDER_MASTER ||--o{ PURCHASE_ORDERS : "sourced for"
+    PURCHASE_ORDERS ||--o{ PURCHASE_ORDER_ITEMS : "contains"
+    FABRIC_TYPES ||--o{ PURCHASE_ORDER_ITEMS : "of fabric"
+    GARMENT_TYPES ||--o{ PURCHASE_ORDER_ITEMS : "for garment"
+    VENDORS ||--o{ FABRIC_PURCHASES : "invoices"
+    FABRIC_TYPES ||--o{ FABRIC_PURCHASES : "of fabric"
+    FABRIC_PURCHASES ||--o{ FABRIC_LOTS : "received as"
+    FABRIC_TYPES ||--o{ FABRIC_LOTS : "batched as"
+
+    %% ============ PRODUCTION ============
+    ORDER_MASTER ||--o{ CUTTING_GROUPS : "grouped for"
+    GARMENT_TYPES ||--o{ CUTTING_GROUPS : "sized for"
+    ORDER_MASTER ||--o{ CUTTING_LOG : "cut for"
+    FABRIC_LOTS ||--o{ CUTTING_LOG : "consumes"
+    GARMENT_TYPES ||--o{ CUTTING_LOG : "produces"
+    EMPLOYEES ||--o{ CUTTING_LOG : "cut by"
+    ORDER_MASTER ||--o{ DAILY_PRODUCTION_LOG : "stitched for"
+    PRODUCTION_PHASES ||--o{ DAILY_PRODUCTION_LOG : "at phase"
+    EMPLOYEES ||--o{ DAILY_PRODUCTION_LOG : "worked by"
+    GARMENT_TYPES ||--o{ DAILY_PRODUCTION_LOG : "of type"
+
+    %% ============ DELIVERY & FINISHED STOCK ============
+    ORDER_MASTER ||--o{ DELIVERY_RECORDS : "delivers"
+    MEASUREMENTS ||--o{ DELIVERY_RECORDS : "fulfils"
+    GARMENT_TYPES ||--o{ DELIVERY_RECORDS : "item of"
+    CUTTING_GROUPS ||--o{ DELIVERY_RECORDS : "sized by"
+    GARMENT_TYPES ||--o{ STOCK_MASTER : "stocked as"
+
+    USERS {
+        int id PK
+        string name
+        string email
+        string role
+    }
+    EMPLOYEES {
+        int id PK
+        string name
+        string role
+        bool is_active
+    }
+    LEAD_SOURCES {
+        int id PK
+        string name
+    }
+    LEAD_STATUSES {
+        int id PK
+        string name
+        string process_stage
+        int sort_order
+    }
+    CUSTOMER_MASTER {
+        int id PK
+        string name
+        string short_code
+        string institution_type
+    }
+    LEADS_MASTER {
+        int id PK
+        string school_name
+        string institution_type
+        int lead_source_id FK
+        int lead_status_id FK
+        int customer_id FK
+        int assigned_to FK
+        string year
+        timestamp follow_up_date
+        numeric male_payment_amount
+        numeric female_payment_amount
+        string currency
+    }
+    GARMENT_TYPES {
+        int id PK
+        string name
+        string gender
+        string clothing_category
+    }
+    FABRIC_TYPES {
+        int id PK
+        string name
+        string composition
+        int gsm
+        numeric price_per_meter
+    }
+    VENDORS {
+        int id PK
+        string name
+        string vat_number
+        string payment_terms
+    }
+    ORDER_MASTER {
+        int id PK
+        string order_id UK
+        int lead_id FK
+        int customer_id FK
+        string status
+        timestamp expected_delivery_date
+        timestamp actual_delivery_date
+        string batch_label
+    }
+    MEASUREMENTS {
+        int id PK
+        int lead_id FK
+        int order_id FK
+        int school_id FK
+        string student_name
+        string gender
+        jsonb measurements
+        jsonb quantities
+        numeric total_payable
+        numeric payment_received
+        numeric balance_amount
+    }
+    ORDER_INVOICES {
+        int id PK
+        string invoice_number UK
+        int order_id FK
+        numeric net_total
+        numeric vat_rate
+        numeric vat_amount
+        numeric grand_total
+        numeric advance_paid
+        numeric balance
+    }
+    ORDER_PAYMENTS {
+        int id PK
+        int order_id FK
+        numeric amount
+        timestamp payment_date
+        string payment_mode
+        int recorded_by FK
+    }
+    PURCHASE_ORDERS {
+        int id PK
+        string po_number UK
+        int vendor_id FK
+        int order_id FK
+        numeric total_amount
+        timestamp expected_delivery
+        timestamp actual_delivery
+        string status
+    }
+    PURCHASE_ORDER_ITEMS {
+        int id PK
+        int purchase_order_id FK
+        int fabric_type_id FK
+        int order_id FK
+        int clothing_type_id FK
+        numeric quantity
+        numeric total_price
+    }
+    FABRIC_PURCHASES {
+        int id PK
+        string invoice_number
+        int vendor_id FK
+        int fabric_type_id FK
+        numeric quantity
+        numeric net_cost
+        numeric vat_amount
+        numeric total_cost
+    }
+    FABRIC_LOTS {
+        int id PK
+        string lot_number UK
+        int purchase_id FK
+        int fabric_type_id FK
+        numeric initial_quantity
+        numeric remaining_quantity
+        numeric price_per_unit
+    }
+    PRODUCTION_PHASES {
+        int id PK
+        string name
+        int sequence_order
+    }
+    CUTTING_GROUPS {
+        int id PK
+        string order_id FK
+        int garment_type_id FK
+        int group_number
+        jsonb adjusted_measurements
+    }
+    CUTTING_LOG {
+        int id PK
+        int order_id FK
+        int clothing_type_id FK
+        int fabric_lot_id FK
+        int cut_by FK
+        numeric fabric_consumed_meters
+        int pieces_produced
+        numeric expected_wastage
+        numeric actual_wastage
+    }
+    DAILY_PRODUCTION_LOG {
+        int id PK
+        int order_id FK
+        int phase_id FK
+        int clothing_type_id FK
+        int employee_id FK
+        timestamp production_date
+        int pieces_completed
+    }
+    DELIVERY_RECORDS {
+        int id PK
+        string unique_code UK
+        string order_id FK
+        int measurement_id FK
+        int garment_type_id FK
+        int cutting_group_id FK
+        string status
+        timestamp delivered_at
+        timestamp returned_at
+        string return_reason
+    }
+    STOCK_MASTER {
+        int id PK
+        int clothing_type_id FK
+        string item_code
+        numeric available_qty
+        numeric purchase_price
+    }

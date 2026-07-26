@@ -1,0 +1,339 @@
+table,column,data_type,nullable,key
+users,id,integer,NO,PK
+users,name,character varying(100),NO,
+users,email,character varying(255),NO,
+users,role,character varying(50),NO,
+users,is_active,boolean,NO,
+users,created_at,timestamp without time zone,NO,
+employees,id,integer,NO,PK
+employees,name,character varying(255),NO,
+employees,role,character varying(100),NO,
+employees,phone_number,character varying(20),NO,
+employees,is_active,boolean,NO,
+employees,created_by,integer,NO,FK -> users.id
+employees,created_at,timestamp without time zone,NO,
+employees,updated_by,integer,NO,FK -> users.id
+employees,updated_at,timestamp without time zone,NO,
+employees,deactivated_at,timestamp without time zone,YES,
+lead_sources,id,integer,NO,PK
+lead_sources,name,character varying(100),NO,
+lead_sources,description,text,NO,
+lead_sources,is_active,boolean,NO,
+lead_sources,created_by,integer,NO,FK -> users.id
+lead_sources,created_at,timestamp without time zone,NO,
+lead_sources,updated_by,integer,NO,FK -> users.id
+lead_sources,updated_at,timestamp without time zone,NO,
+lead_statuses,id,integer,NO,PK
+lead_statuses,name,character varying(50),NO,
+lead_statuses,description,text,NO,
+lead_statuses,sort_order,integer,NO,
+lead_statuses,is_active,boolean,NO,
+lead_statuses,process_stage,character varying(50),NO,
+lead_statuses,created_by,integer,NO,FK -> users.id
+lead_statuses,created_at,timestamp without time zone,NO,
+lead_statuses,updated_by,integer,NO,FK -> users.id
+lead_statuses,updated_at,timestamp without time zone,NO,
+customer_master,id,integer,NO,PK
+customer_master,name,character varying(255),NO,
+customer_master,short_code,character varying(10),NO,
+customer_master,institution_type,character varying(100),NO,
+customer_master,address,text,NO,
+customer_master,contact_person,character varying(100),NO,
+customer_master,contact_number,character varying(20),NO,
+customer_master,email,character varying(255),NO,
+customer_master,is_active,boolean,NO,
+customer_master,password,character varying(255),NO,
+customer_master,created_by,integer,NO,FK -> users.id
+customer_master,created_at,timestamp without time zone,NO,
+customer_master,updated_by,integer,NO,FK -> users.id
+customer_master,updated_at,timestamp without time zone,NO,
+leads_master,id,integer,NO,PK
+leads_master,school_name,character varying(255),NO,
+leads_master,institution_type,character varying(20),NO,
+leads_master,requirement,text,NO,
+leads_master,contact_person,character varying(255),NO,
+leads_master,phone_number,character varying(20),NO,
+leads_master,email,character varying(255),NO,
+leads_master,location,character varying(255),NO,
+leads_master,follow_up_date,timestamp without time zone,NO,
+leads_master,next_action_plan,text,YES,
+leads_master,remarks_notes,text,YES,
+leads_master,assigned_to,integer,NO,FK -> users.id
+leads_master,created_by,integer,NO,FK -> users.id
+leads_master,created_at,timestamp without time zone,NO,
+leads_master,updated_at,timestamp without time zone,NO,
+leads_master,is_active,boolean,NO,
+leads_master,lead_source_id,integer,NO,FK -> lead_sources.id
+leads_master,lead_status_id,integer,NO,FK -> lead_statuses.id
+leads_master,required_clothing_types,jsonb,NO,
+leads_master,required_male_clothing_types,jsonb,NO,
+leads_master,required_female_clothing_types,jsonb,NO,
+leads_master,year,character varying(10),NO,
+leads_master,updated_by,integer,NO,FK -> users.id
+leads_master,customer_id,integer,YES,FK -> customer_master.id
+leads_master,payment_collection_type,character varying(50),NO,
+leads_master,male_payment_amount,"numeric(10,2)",NO,
+leads_master,female_payment_amount,"numeric(10,2)",NO,
+leads_master,currency,character(3),NO,
+leads_master,is_potential_customer,boolean,NO,
+leads_master,referrer_name,character varying(255),YES,
+leads_master,batch_label,character varying(100),NO,
+garment_types,id,integer,NO,PK
+garment_types,name,character varying(100),NO,
+garment_types,description,text,NO,
+garment_types,is_active,boolean,NO,
+garment_types,gender,character varying(10),NO,
+garment_types,clothing_category,character varying(50),NO,
+garment_types,created_by,integer,NO,FK -> users.id
+garment_types,created_at,timestamp without time zone,NO,
+garment_types,updated_by,integer,NO,FK -> users.id
+garment_types,updated_at,timestamp without time zone,NO,
+fabric_types,id,integer,NO,PK
+fabric_types,name,character varying(100),NO,
+fabric_types,composition,text,NO,
+fabric_types,gsm,integer,NO,
+fabric_types,width,"numeric(8,2)",NO,
+fabric_types,price_per_meter,"numeric(10,2)",NO,
+fabric_types,currency,character(3),NO,
+fabric_types,supplier,character varying(100),NO,
+fabric_types,color,character varying(50),NO,
+fabric_types,is_active,boolean,NO,
+vendors,id,integer,NO,PK
+vendors,name,character varying(100),NO,
+vendors,contact_person,character varying(100),NO,
+vendors,email,character varying(255),NO,
+vendors,phone,character varying(20),NO,
+vendors,address,text,NO,
+vendors,vat_number,character varying(20),NO,
+vendors,payment_terms,text,NO,
+vendors,is_active,boolean,NO,
+vendors,created_at,timestamp without time zone,NO,
+order_master,id,integer,NO,PK
+order_master,order_id,character varying(50),NO,UQ (business key)
+order_master,lead_id,integer,NO,FK -> leads_master.id
+order_master,customer_id,integer,NO,FK -> customer_master.id
+order_master,school_name,character varying(255),NO,
+order_master,year,character varying(10),NO,
+order_master,institution_type,character varying(100),NO,
+order_master,status,character varying(50),NO,
+order_master,requirements,jsonb,NO,
+order_master,contact_person,character varying(255),NO,
+order_master,phone_number,character varying(20),NO,
+order_master,email,character varying(255),NO,
+order_master,location,character varying(255),NO,
+order_master,expected_delivery_date,timestamp without time zone,NO,
+order_master,actual_delivery_date,timestamp without time zone,YES,
+order_master,created_by,integer,NO,FK -> users.id
+order_master,created_at,timestamp without time zone,NO,
+order_master,updated_by,integer,NO,FK -> users.id
+order_master,updated_at,timestamp without time zone,NO,
+order_master,is_active,boolean,NO,
+order_master,payment_contact_name,character varying(255),NO,
+order_master,payment_contact_mobile,character varying(20),NO,
+order_master,batch_label,character varying(100),NO,
+order_master,assigned_to,integer,NO,FK -> users.id
+measurements,id,integer,NO,PK
+measurements,lead_id,integer,NO,FK -> leads_master.id
+measurements,order_id,integer,NO,FK -> order_master.id
+measurements,school_id,integer,NO,FK -> customer_master.id
+measurements,person_name,character varying(255),NO,
+measurements,student_name,character varying(255),NO,
+measurements,student_class,character varying(50),NO,
+measurements,student_section,character varying(50),NO,
+measurements,roll_number,character varying(50),NO,
+measurements,gender,character varying(10),NO,
+measurements,mobile_number,character varying(20),YES,
+measurements,clothing_types,jsonb,NO,
+measurements,measurements,jsonb,NO,
+measurements,quantities,jsonb,NO,
+measurements,total_payable,"numeric(10,2)",NO,
+measurements,payment_received,"numeric(10,2)",NO,
+measurements,balance_amount,"numeric(10,2)",NO,
+measurements,currency,character(3),NO,
+measurements,measurement_date,timestamp without time zone,NO,
+measurements,measurement_status,character varying(50),NO,
+measurements,taken_by,integer,NO,FK -> users.id
+measurements,notes,text,YES,
+measurements,created_by,integer,NO,FK -> users.id
+measurements,created_at,timestamp without time zone,NO,
+measurements,updated_by,integer,NO,FK -> users.id
+measurements,updated_at,timestamp without time zone,NO,
+measurements,is_active,boolean,NO,
+order_invoices,id,integer,NO,PK
+order_invoices,invoice_number,character varying(50),NO,UQ
+order_invoices,order_id,integer,NO,FK -> order_master.id
+order_invoices,invoice_date,timestamp without time zone,NO,
+order_invoices,line_items_json,jsonb,NO,
+order_invoices,net_total,"numeric(12,2)",NO,
+order_invoices,vat_rate,"numeric(12,2)",NO,
+order_invoices,vat_amount,"numeric(12,2)",NO,
+order_invoices,grand_total,"numeric(12,2)",NO,
+order_invoices,currency,character(3),NO,
+order_invoices,advance_paid,"numeric(12,2)",NO,
+order_invoices,balance,"numeric(12,2)",NO,
+order_invoices,is_active,boolean,NO,
+order_invoices,created_by,integer,NO,FK -> users.id
+order_invoices,created_at,timestamp without time zone,NO,
+order_invoices,bill_to_name,text,NO,
+order_invoices,bill_to_address,text,NO,
+order_invoices,bank_details,text,NO,
+order_invoices,comments,text,NO,
+order_invoices,signatory_name,character varying(200),NO,
+order_invoices,updated_at,timestamp with time zone,NO,
+order_invoices,updated_by,integer,NO,FK -> users.id
+order_invoices,is_draft,boolean,NO,
+order_payments,id,integer,NO,PK
+order_payments,order_id,integer,NO,FK -> order_master.id
+order_payments,amount,"numeric(10,2)",NO,
+order_payments,currency,character(3),NO,
+order_payments,payment_date,timestamp without time zone,NO,
+order_payments,payment_mode,character varying(20),NO,
+order_payments,transaction_type,character varying(20),NO,
+order_payments,receipt_number,character varying(100),NO,
+order_payments,notes,text,YES,
+order_payments,recorded_by,integer,NO,FK -> users.id
+order_payments,created_at,timestamp without time zone,NO,
+purchase_orders,id,integer,NO,PK
+purchase_orders,po_number,character varying(50),NO,UQ
+purchase_orders,vendor_id,integer,NO,FK -> vendors.id
+purchase_orders,total_amount,"numeric(12,2)",NO,
+purchase_orders,currency,character(3),NO,
+purchase_orders,po_date,timestamp without time zone,NO,
+purchase_orders,expected_delivery,timestamp without time zone,NO,
+purchase_orders,actual_delivery,timestamp without time zone,NO,
+purchase_orders,status,character varying(20),NO,
+purchase_orders,notes,text,YES,
+purchase_orders,created_by,integer,NO,FK -> users.id
+purchase_orders,created_at,timestamp without time zone,NO,
+purchase_orders,order_id,integer,NO,FK -> order_master.id
+purchase_orders,remarks,text,NO,
+purchase_order_items,id,integer,NO,PK
+purchase_order_items,purchase_order_id,integer,NO,FK -> purchase_orders.id
+purchase_order_items,fabric_type_id,integer,NO,FK -> fabric_types.id
+purchase_order_items,quantity,"numeric(10,4)",NO,
+purchase_order_items,unit_of_measure,character varying(20),NO,
+purchase_order_items,unit_price,"numeric(10,2)",NO,
+purchase_order_items,net_price,"numeric(12,2)",NO,
+purchase_order_items,vat_rate,"numeric(12,2)",NO,
+purchase_order_items,vat_amount,"numeric(12,2)",NO,
+purchase_order_items,total_price,"numeric(12,2)",NO,
+purchase_order_items,currency,character(3),NO,
+purchase_order_items,specifications,text,NO,
+purchase_order_items,order_id,integer,NO,FK -> order_master.id
+purchase_order_items,clothing_type_id,integer,NO,FK -> garment_types.id
+purchase_order_items,material_type,character varying(100),NO,
+purchase_order_items,manufacturer,character varying(100),NO,
+purchase_order_items,color,character varying(50),NO,
+purchase_order_items,created_by,integer,NO,FK -> users.id
+purchase_order_items,created_at,timestamp without time zone,NO,
+purchase_order_items,buffer_stock,"numeric(10,4)",NO,
+purchase_order_items,per_piece_requirement,"numeric(10,4)",NO,
+purchase_order_items,piece_count,integer,NO,
+fabric_purchases,id,integer,NO,PK
+fabric_purchases,invoice_number,character varying(100),NO,
+fabric_purchases,invoice_date,timestamp without time zone,NO,
+fabric_purchases,vendor_id,integer,NO,FK -> vendors.id
+fabric_purchases,vendor_name,character varying(255),NO,
+fabric_purchases,fabric_type_id,integer,NO,FK -> fabric_types.id
+fabric_purchases,manufacturer,character varying(255),NO,
+fabric_purchases,color,character varying(50),NO,
+fabric_purchases,quantity,"numeric(10,2)",NO,
+fabric_purchases,unit,character varying(20),NO,
+fabric_purchases,cost_per_unit,"numeric(10,2)",NO,
+fabric_purchases,net_cost,"numeric(12,2)",NO,
+fabric_purchases,vat_rate,"numeric(12,2)",NO,
+fabric_purchases,vat_amount,"numeric(12,2)",NO,
+fabric_purchases,total_cost,"numeric(12,2)",NO,
+fabric_purchases,currency,character(3),NO,
+fabric_purchases,notes,text,YES,
+fabric_purchases,created_by,integer,NO,FK -> users.id
+fabric_purchases,created_at,timestamp without time zone,NO,
+fabric_lots,id,integer,NO,PK
+fabric_lots,lot_number,character varying(50),NO,UQ
+fabric_lots,purchase_id,integer,NO,FK -> fabric_purchases.id
+fabric_lots,fabric_type_id,integer,NO,FK -> fabric_types.id
+fabric_lots,color,character varying(50),NO,
+fabric_lots,initial_quantity,"numeric(10,2)",NO,
+fabric_lots,remaining_quantity,"numeric(10,2)",NO,
+fabric_lots,unit,character varying(20),NO,
+fabric_lots,price_per_unit,"numeric(10,2)",NO,
+fabric_lots,currency,character(3),NO,
+fabric_lots,created_at,timestamp without time zone,NO,
+fabric_lots,updated_at,timestamp without time zone,NO,
+production_phases,id,integer,NO,PK
+production_phases,name,character varying(100),NO,
+production_phases,sequence_order,integer,NO,
+production_phases,is_active,boolean,NO,
+production_phases,created_at,timestamp without time zone,NO,
+cutting_groups,id,integer,NO,PK
+cutting_groups,order_id,character varying(50),NO,FK -> order_master.order_id
+cutting_groups,garment_type_id,integer,NO,FK -> garment_types.id
+cutting_groups,group_number,integer,NO,
+cutting_groups,adjusted_measurements,jsonb,NO,
+cutting_groups,notes,text,YES,
+cutting_groups,created_by,integer,NO,FK -> users.id
+cutting_groups,created_at,timestamp without time zone,NO,
+cutting_groups,updated_at,timestamp without time zone,NO,
+cutting_log,id,integer,NO,PK
+cutting_log,order_id,integer,NO,FK -> order_master.id
+cutting_log,clothing_type_id,integer,NO,FK -> garment_types.id
+cutting_log,fabric_lot_id,integer,NO,FK -> fabric_lots.id
+cutting_log,fabric_consumed_meters,"numeric(10,2)",NO,
+cutting_log,pieces_produced,integer,NO,
+cutting_log,expected_wastage,"numeric(10,2)",NO,
+cutting_log,actual_wastage,"numeric(10,2)",NO,
+cutting_log,wastage_reason,text,YES,
+cutting_log,cut_by,integer,NO,FK -> employees.id
+cutting_log,cut_date,timestamp without time zone,NO,
+cutting_log,notes,text,YES,
+cutting_log,created_by,integer,NO,FK -> users.id
+cutting_log,created_at,timestamp without time zone,NO,
+daily_production_log,id,integer,NO,PK
+daily_production_log,order_id,integer,NO,FK -> order_master.id
+daily_production_log,phase_id,integer,NO,FK -> production_phases.id
+daily_production_log,clothing_type_id,integer,NO,FK -> garment_types.id
+daily_production_log,production_date,timestamp without time zone,NO,
+daily_production_log,employee_id,integer,NO,FK -> employees.id
+daily_production_log,pieces_completed,integer,NO,
+daily_production_log,pieces_in_progress,integer,NO,
+daily_production_log,pieces_pending,integer,NO,
+daily_production_log,notes,text,YES,
+daily_production_log,created_by,integer,NO,FK -> users.id
+daily_production_log,created_at,timestamp without time zone,NO,
+delivery_records,id,integer,NO,PK
+delivery_records,unique_code,text,NO,UQ
+delivery_records,order_id,character varying(50),NO,FK -> order_master.order_id
+delivery_records,measurement_id,integer,NO,FK -> measurements.id
+delivery_records,garment_type_id,integer,NO,FK -> garment_types.id
+delivery_records,cutting_group_id,integer,NO,FK -> cutting_groups.id
+delivery_records,student_name,text,NO,
+delivery_records,student_class,text,NO,
+delivery_records,student_section,text,NO,
+delivery_records,adjusted_measurements,jsonb,NO,
+delivery_records,original_measurements,jsonb,NO,
+delivery_records,status,character varying(30),NO,
+delivery_records,dc_number,text,YES,
+delivery_records,piece_index,integer,NO,
+delivery_records,created_by,integer,NO,FK -> users.id
+delivery_records,created_at,timestamp without time zone,NO,
+delivery_records,updated_at,timestamp without time zone,NO,
+delivery_records,delivered_at,timestamp without time zone,YES,
+delivery_records,delivered_by,integer,YES,FK -> users.id
+delivery_records,returned_at,timestamp without time zone,YES,
+delivery_records,returned_by,integer,YES,FK -> users.id
+delivery_records,return_reason,text,YES,
+stock_master,id,integer,NO,PK
+stock_master,clothing_type_id,integer,NO,FK -> garment_types.id
+stock_master,item_code,character varying(50),NO,
+stock_master,lot_batch,character varying(50),NO,
+stock_master,material_type,character varying(255),NO,
+stock_master,manufacturer,character varying(255),NO,
+stock_master,material_color,character varying(255),NO,
+stock_master,available_qty,"numeric(10,2)",NO,
+stock_master,unit_of_measure,character varying(20),NO,
+stock_master,purchase_price,"numeric(10,2)",NO,
+stock_master,vat_rate,"numeric(12,2)",NO,
+stock_master,currency,character(3),NO,
+stock_master,created_at,timestamp without time zone,NO,
+stock_master,updated_at,timestamp without time zone,NO,
+stock_master,remarks,text,NO,
