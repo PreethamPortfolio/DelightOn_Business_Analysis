@@ -1,36 +1,3 @@
-#!/usr/bin/env python3
-"""
-Mock data generator — DelightOn Garments Ltd. (BIBA Sem 3, NCI)
-================================================================
-Fresh, 100% original synthetic dataset (new seed, new values) for a
-school-uniform garment manufacturer in severe operational and financial
-distress. Produces 24 CSV tables covering Sales/CRM, Orders & Billing,
-Supply Chain & Inventory, Production, and HR & Operations.
-
-KEY DATA-QUALITY RULES (per project requirements)
-  * CURRENCY  - every monetary value is EUR, rounded to 2 dp; financial
-                tables carry an explicit `currency` = 'EUR' column.
-  * TAX       - NO GST columns anywhere. Irish VAT is used and CALCULATED:
-                  - children's clothing (Primary / Gaelscoil orders): 0%
-                  - adult-size clothing (Secondary / College orders): 23%
-                  - fabric & trims (B2B supply): 23%
-                Invoices carry net_total, vat_rate, vat_amount, grand_total
-                with the identity  grand_total = net_total + vat_amount.
-  * INTEGRITY - all FKs resolve; grand_total = advance + payments + balance;
-                lot remaining <= initial; no effect precedes its cause.
-
-EMBEDDED BUSINESS-DISTRESS SIGNALS (for dashboards)
-  * Lead conversion DROPS year-on-year   (~28% AY2025 -> ~16% AY2026)
-  * Late deliveries WORSEN year-on-year  (~40% AY2025 -> ~60% AY2026)
-  * Supply-chain bottleneck: ~40% of fabric POs arrive late (two vendors
-    are chronic offenders); late fabric correlates with late orders
-  * Cutting wastage 9-15% vs a 5% plan; ~17% of purchased fabric idle
-  * ~5% of delivered garments returned; receivables ageing
-
-Usage:  python3 generate_mock_data.py [output_dir]
-Seed fixed (4321) => fully reproducible.
-"""
-
 import json
 import random
 import sys
